@@ -34,7 +34,7 @@ app.post("/signup", async (req,res)=>{
         if(user){
           return res.status(400).json({message:"Username already exist",isSignup:false})
         }
-        if(password.length<6){
+        if(password.length<5){
           return res.status(400).json({message:"Password should contain more than 6 characters",isSignup:false})
         }
         const hashPassword= await bcrypt.hash(password,10)
@@ -80,6 +80,7 @@ app.post("/login",async (req,res)=>{
     const lowerUserName=userName.toLowerCase()
     const user=await SignUp.findOne({userName:lowerUserName})
     if(!user){
+      console.log()
       return res.status(400).json({message:"Username does not exsist",isLogin:false})
     }
     const isMatch=await bcrypt.compare(password,user.password)
