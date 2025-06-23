@@ -1,42 +1,50 @@
-import {useState} from 'react'
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function login() {
-    const [username,setUN]=useState("");
-    const [password,setPassword]=useState("");
-    const navigate=useNavigate()
-    const handlelogin =async (e)=>{
-        e.preventDefault();
-        const req=await axios.post("http://localhost:3001/login",{
-            userName:username,
-            password:password
-        })
-        const message=req.data.message
-        const isLogin=req.data.isLogin
-        if(!isLogin){
-            alert(message)
-        }else{
-            navigate("/dashboard")
-        }
+function Login() {
+  const [userName, setUN] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const req = await axios.post("http://localhost:3001/login", {
+        userName,
+        password
+      });
+
+      const { message, isLogin } = req.data;
+
+      if (isLogin) {
+        navigate("/dashboard");
+      } else {
+        alert(message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message);
     }
+  };
+
   return (
     <div>
-        <form onSubmit={handlelogin}>
-            <div>
-                <label htmlFor="">Username:</label>
-                <input type="text" value={username} onChange={(e)=>setUN(e.target.value)} required/>
-            </div>
-            <div>
-                <label htmlFor="">Password:</label>
-                <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-            </div>
-            <button type='submit'>Sign in</button>
-        </form>
-        don't have an account?
-        <a href='/signup'>signup</a>
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Enter Username: </label>
+          <input type="text" value={userName} onChange={(e) => setUN(e.target.value)} required />
+        </div>
+        <div>
+          <label>Enter Password: </label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </div>
+        <button type='submit'>Login</button>
+      </form>
+      <div>Don't have an account? <a href='/signup'>Create Account</a></div>
     </div>
-  )
+  );
 }
 
-export default login
+export default Login;

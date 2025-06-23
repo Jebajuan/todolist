@@ -2,7 +2,12 @@ import React from 'react'
 
 function home() {
   return (
-    <div>home</div>
+    <div>
+      <h1>home</h1>
+      <div>
+        <button type='button'><a href='/login'>Get Started</a></button>
+      </div>
+    </div>
   )
 }
 

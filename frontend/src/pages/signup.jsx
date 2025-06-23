@@ -1,42 +1,53 @@
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
+import './CSS/signup.css'
 
 function signup() {
-    const [username,setUN]=useState("");
+    const [userName,setUN]=useState("");
     const [password,setPassword]=useState("");
     const [email,setEmail]=useState("");
     const navigate=useNavigate()
     const handleSignUp= async (e) =>{
         e.preventDefault()
-        const req=await axios.post("http://localhost:3001/signup",{
-            userName:username,
-            password:password,
-            email:email
-          })
-          const {message,isSignup} =req.data;
-          if(!isSignup){
-            alert(message)
+        try{
+          const req= await axios.post("http://localhost:3001/signup",{
+            userName,
+            password,
+            email
+          });
+
+          const {message, isSignup}=req.data
+
+          if(isSignup){
+            navigate("/dashboard")
           }else{
-            navigate("/login") 
+            alert(message)
           }
+        }
+        catch(err){
+          alert(err.response?.data?.message)
+        }
     }
+
   return (
-    <div>
+    <div >
         <form onSubmit={handleSignUp}>
-            <div>
+            <div id='input'>
                 <label>Username</label>
-                <input type="text" value={username} onChange={(e)=>setUN(e.target.value)} required/>
+                <input type="text" value={userName} onChange={(e)=>setUN(e.target.value)} required/>
             </div>
-            <div>
+            <div id='input'>
                 <label>password</label>
                 <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required/>
             </div>
-            <div>
+            <div id='input'>
                 <label>Email</label>
                 <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
             </div>
-            <button type='submit'>Sign up</button>
+            <div>
+              <button type='submit'>Sign up</button>
+            </div>
         </form>
         already have an account 
         <a href='/login'>Login</a>

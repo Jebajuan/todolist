@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation} from "react-router-dom";
 import Navbar from './pages/navbar'
 import Signup from './pages/signup'
 import Login from './pages/login'
@@ -7,11 +7,12 @@ import Dashboard from './pages/dashboard'
 import Display from './pages/display'
 import Home from './pages/home'
 
-function App() {
+function AppWrapper() {
+  const location=useLocation()
+  const hideNavbarPaths=["/"]
   return (
     <>
-      <BrowserRouter>
-      <Navbar />
+      {!hideNavbarPaths.includes(location.pathname) && <Navbar />}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />}/>
@@ -20,9 +21,15 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />}/>
             <Route path="/display" element={<Display />} />
           </Routes>
-      </BrowserRouter>
     </>
   )
 }
 
-export default App
+export default function App(){
+  return (
+    <BrowserRouter>
+      <AppWrapper />
+    </BrowserRouter>
+  );
+}
+
