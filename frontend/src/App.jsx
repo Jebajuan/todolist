@@ -9,7 +9,7 @@ import Home from './pages/home'
 
 function AppWrapper() {
   const location=useLocation()
-  const hideNavbarPaths=["/"]
+  const hideNavbarPaths=["/","/login","/signup"]
   return (
     <>
       {!hideNavbarPaths.includes(location.pathname) && <Navbar />}
