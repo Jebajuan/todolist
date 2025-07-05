@@ -11,10 +11,19 @@ const createTask=require('./models/createSchema')
 dotenv.config()
 
 const app = express()
-const PORT = 3001
+
+const corsOptions = {
+  origin: ['https://todolist-nigk.vercel.app', 'http://localhost:5173'], // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+const PORT = process.env.PORT || 3001
 
 app.use(express.json())
-app.use(cors())
+app.set('trust proxy', 1);
+app.use(cors(corsOptions))
 
 mdb
   .connect(process.env.MONGODB_URL)
@@ -58,7 +67,7 @@ app.post("/signup", async (req,res)=>{
           return res.status(400).json({message:"Username already exist",isSignup:false})
         }
         if(password.length<5){
-          return res.status(400).json({message:"Password should contain more than 6 characters",isSignup:false})
+          return res.status(400).json({message:"Password should contain more than 5 characters",isSignup:false})
         }
         const hashPassword= await bcrypt.hash(password,10)
         const newSignUp=new SignUp({
@@ -80,7 +89,7 @@ app.post("/signup", async (req,res)=>{
     }
 })
 
-app.post("/create",async(req,res)=>{
+app.post("/create",auth,async(req,res)=>{
   try{
     const {userName,taskName,tasks}=req.body
     const lowerTaskname=taskName.toLowerCase()
@@ -149,7 +158,7 @@ app.post("/display",auth,async (req,res)=>{
     const taskList=task.taskList
     res.status(200).json({taskList})
   }
-  catch{
+  catch(error){
     res.status(400).json({message:"Display failed"})
   }
 })
@@ -221,5 +230,10 @@ app.post("/logout",(req,res)=>{
   refreshTokens=refreshTokens.filter(token=>token !== refreshToken);
   res.status(200).json({message:"Logout Successfull",isLogout:true})
 })
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal server error' });
+});
 
 app.listen(PORT,()=>console.log("Server started successfully"))
