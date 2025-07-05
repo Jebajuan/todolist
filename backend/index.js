@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 3001
 app.use(express.json())
 app.set('trust proxy', 1);
 app.use(cors(corsOptions))
+app.options('*',cors(corsOptions))
 
 mdb
   .connect(process.env.MONGODB_URL)
@@ -41,7 +42,7 @@ const auth=(req,res,next)=>{
   const token= authHeader && authHeader.split(' ')[1]
 
   if(!token){
-    return res.status(400).json({message:"Access denied"})
+    return res.status(400).json({message:"Access denied No token provided"})
   }
 
   try{
@@ -50,12 +51,12 @@ const auth=(req,res,next)=>{
     next()
   }
   catch(err){
-    return res.status(400).json({message:"Invalid token"})
+    return res.status(400).json({message:"Invalid or expired token"})
   }
 }
 
 app.get("/",(req,res)=>{
-    res.send("<h1> Welcome to Backend Server</h1>")
+    res.send("<h1> Todo List Backend Server</h1>")
 })
 
 app.post("/signup", async (req,res)=>{
@@ -85,7 +86,7 @@ app.post("/signup", async (req,res)=>{
         refreshTokens.push(refreshToken)
         res.status(201).json({message:"Signup Successful",isSignup:true,accessToken,refreshToken})
     } catch (error) {
-        res.status(400).json({message:"Signup Failed",isSignup:false})
+        res.status(500).json({message:"Signup Failed",isSignup:false})
     }
 })
 
@@ -119,11 +120,11 @@ app.post("/login",async (req,res)=>{
     const lowerUserName=userName.toLowerCase()
     const user=await SignUp.findOne({userName:lowerUserName})
     if(!user){
-      return res.status(400).json({message:"Username does not exsist",isLogin:false})
+      return res.status(404).json({message:"Username does not exsist",isLogin:false})
     }
     const isMatch=await bcrypt.compare(password,user.password)
     if(!isMatch){
-      return res.status(400).json({message:"Incorrect password",isLogin:false});
+      return res.status(401).json({message:"Incorrect password",isLogin:false});
     }
     const payload={
       userName:user.userName
@@ -134,7 +135,7 @@ app.post("/login",async (req,res)=>{
     res.status(200).json({message:"Login successful",isLogin:true,accessToken,refreshToken})
   }
   catch(error){
-    res.status(400).json({message:"Login failed",isLogin:false})
+    res.status(500).json({message:"Login failed",isLogin:false})
   }
 })
 
