@@ -3,7 +3,7 @@ import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode';
-// import './CSS/create.css'
+import './CSS/create.css'
 
 function createtask() {
     const [userName,setUN]=useState("")
@@ -72,9 +72,17 @@ function createtask() {
     const handleCreation=async (e)=>{
         e.preventDefault();
         try{
+            if(!taskName.trim()){
+                alert("Enter a valid Task Name");
+                return;
+            }
+            if(items.length<1){
+                alert("Enter the list");
+                return;
+            }
             const req=await axiosPostWithAuth("http://localhost:3001/create",{
                 userName:userName,
-                taskName:taskName,
+                taskName:taskName.trim(),
                 tasks:items
             });
             const {message,isCreate}=req.data
@@ -92,6 +100,10 @@ function createtask() {
 
     const add=(e)=>{
         e.preventDefault();
+        if(!inputValue.trim()){
+            alert("Enter the list");
+            return;
+        }
         if(inputValue.trim()!== ''){
             setItems([...items,inputValue]);
             setIV('');
@@ -103,32 +115,34 @@ function createtask() {
     };
 
   return (
-    <div>
-        <h1>Create a Task</h1>
-        <form onSubmit={handleCreation}>
-            <div >
+    <div className='create-container'>
+        <h1 className='create-title'>Create a Task</h1>
+        <form className='create-form' onSubmit={handleCreation}>
+            <div className='form-group' >
                 <label>Enter the task name:</label>
-                <input  type="text" value={taskName} onChange={(e)=>setTN(e.target.value)} required />
+                <input className='form-input' type="text" value={taskName} onChange={(e)=>setTN(e.target.value)} required />
             </div>
-            <div >
+            <div className='form-group'>
                 <label>Enter the todo things:</label>
-                <input  type="text" value={inputValue} onChange={(e)=>setIV(e.target.value)}/>
-                <button  onClick={add}>Add to List</button>
+                <div className='add-item-container'>
+                <input className='form-input' type="text" value={inputValue} onChange={(e)=>setIV(e.target.value)}/>
+                <button className='add-btn' onClick={add}>Add to List</button>
+            </div>
             </div>
             {items.length>0 &&(
-                <div >
-                    <h3 >Todo items</h3>
-                    <ul >
+                <div className='items-list'>
+                    <h3 className='items-title'>Todo items</h3>
+                    <ul className='items-ul'>
                         {items.map((item,index)=>(
-                            <li key={index}>
-                                <span>{item}</span>
-                            <button  type="button" onClick={()=>removeItem(index)}>Remove</button>
+                            <li className='item-li' key={index}>
+                                <span className='item-text'>{item}</span>
+                            <button className='remove-item-btn' type="button" onClick={()=>removeItem(index)}>Remove</button>
                             </li>
                         ))}
                     </ul>
                 </div>
             )}
-            <button type='submit' >Add task</button>
+            <button className='submit-btn' type='submit' >Add task</button>
         </form>
     </div>
   )

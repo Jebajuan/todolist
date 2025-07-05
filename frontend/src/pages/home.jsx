@@ -1,7 +1,15 @@
-import React from 'react'
-// import './CSS/home.css'
+import React,{useEffect} from 'react'
+import './CSS/home.css'
 
 function home() {
+
+  useEffect(()=>{
+    document.body.style.overflow='hidden';
+    return ()=>{
+      document.body.style.overflow='visible'
+    }
+  },[])
+
   return (
     <div className="home-container">
       <h1 className="home-title">Welcome to Your To-Do List Web Page</h1>

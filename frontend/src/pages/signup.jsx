@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
-// import './CSS/signup.css'
+import './CSS/signup.css'
 
 function signup() {
     const [userName,setUN]=useState("");
@@ -12,9 +12,9 @@ function signup() {
         e.preventDefault()
         try{
           const req= await axios.post("http://localhost:3001/signup",{
-            userName,
-            password,
-            email
+            userName:userName.trim(),
+            password:password.trim(),
+            email:email.trim()
           });
 
           const {message, isSignup ,accessToken, refreshToken}=req.data
@@ -32,24 +32,26 @@ function signup() {
     }
 
   return (
+    <div className='signup-page-wrapper'>
     <div className='signup-container'>
         <form className='signup-form' onSubmit={handleSignUp}>
           <h2>Sign Up</h2>
-            <div className='form-group'>
+            <div className='signup-form-group'>
                 <label>Username</label>
                 <input type="text" value={userName} onChange={(e)=>setUN(e.target.value)} required/>
             </div>
-            <div className='form-group'>
+            <div className='signup-form-group'>
                 <label>password</label>
                 <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required/>
             </div>
-            <div className='form-group'>
+            <div className='signup-form-group'>
                 <label>Email</label>
                 <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required />
             </div>
-            <button type='submit' className='submit-btn'>Sign up</button>
+            <button className='signup-button' type='submit' >Sign up</button>
             <p className='login-redirect'>Already have an account?<a href="/login">Login</a></p>
         </form>
+    </div>
     </div>
   )
 }

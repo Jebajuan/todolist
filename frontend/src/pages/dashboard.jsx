@@ -1,11 +1,11 @@
 import axios from 'axios'
 import {useState, useEffect} from 'react'
-// import './CSS/dashboard.css'
 import { useNavigate } from 'react-router-dom'
 import {jwtDecode} from 'jwt-decode'
+import './CSS/dashboard.css'
 
 function dashboard() {
-  const [userName,setUN]=useState("")
+  const [userName,setUN]=useState("");
   const [taskno,setTaskno]=useState()
   const [tasks,setTasks]=useState([]);
   const navigate=useNavigate()
@@ -21,7 +21,7 @@ function dashboard() {
         return null
       }
       const res=await axios.post("http://localhost:3001/refresh-token",{refreshToken})
-      localStorage.setItem(res.data.accessToken)
+      localStorage.setItem('accsessToken',res.data.accessToken)
       return res.data.accessToken
     }
     catch(err){
@@ -64,12 +64,17 @@ function dashboard() {
   }
 
   const removeTask=async (index)=>{
-    const taskName=tasks[index];
-    const req=await axiosPostWithAuth("http://localhost:3001/removeTask",{
-      taskName:taskName
-    })
-    setTasks(req.data.taskName)
-    setTaskno(prev=>prev-1)
+    try{
+      const taskName=tasks[index];
+      const req=await axiosPostWithAuth("http://localhost:3001/removeTask",{
+        userName:userName,
+        taskName:taskName
+      })
+      setTasks(req.data.taskName)
+      setTaskno(prev=>prev-1)
+    }catch(error){
+      console.log("Failes to remove task");
+    }
   }
 
   const handleClick = (item) =>{
@@ -81,12 +86,12 @@ function dashboard() {
       const token=getAccessToken()
       if(token){
         try{
-          const decoded=jwtDecode(token)
+          const decoded=jwtDecode(token);
           setUN(decoded.userName)
           await handleData(decoded.userName)
         }
         catch(error){
-          navigate("/login")
+          navigate("/signup")
         }
       }
     }
@@ -96,19 +101,21 @@ function dashboard() {
 
 
   return (
-    <div className='dashboard-container'>
-      <h1>Dashboard</h1>
-      <p className='task-count'>Total number of Task: {taskno}</p>
+    <div className='dashboard-content'>
+      <h1 className='dashboard-title'>Dashboard</h1>
+      <p className='task-summary'>Total number of Task: {taskno}</p>
       
-      <div className='tasks-container'>
+      <div className='task-list'>
         {tasks.map((task,index)=>(
-          <div key={index}>
-          <a href='/display' onClick={()=>handleClick({task})}>{task}</a> <button type='button' onClick={()=>removeTask(index)}>Remove</button>
+          <div className='task-card' key={index}>
+          <a className='task-name' href='/display' onClick={()=>handleClick({task})}>{task}</a>
+           <button className='task-remove' type='button' onClick={()=>removeTask(index)}>Remove</button>
           </div>
         ))}
       </div>
-      <p>Want to create a new task?<a href='/create'>Create</a></p>
+      <p className='create-prompt'>Want to create a new task?<a className='create-link' href='/create'>Create</a></p>
     </div>
+    
   )
 }
 

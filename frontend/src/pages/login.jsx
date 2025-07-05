@@ -1,7 +1,7 @@
-import  { useState } from 'react';
+import  React,{ useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import './CSS/login.css'
+import './CSS/login.css'
 
 function Login() {
   const [userName, setUN] = useState("");
@@ -12,8 +12,8 @@ function Login() {
     e.preventDefault();
     try {
       const req = await axios.post("http://localhost:3001/login", {
-        userName,
-        password
+        userName:userName.trim(),
+        password:password.trim()
       });
 
       const { message, isLogin, accessToken, refreshToken } = req.data;
@@ -30,9 +30,17 @@ function Login() {
     }
   };
 
+  React.useEffect(() => {
+  document.body.style.overflow = 'hidden';
+  return () => {
+    document.body.style.overflow = 'visible'; // Clean up on unmount
+  };
+  }, []);
+
   return (
+    <div className='login-page-wrapper'>
     <div className='login-container'>
-      <form className='login-form' onSubmit={handleLogin}>
+      <form className='login-form'  onSubmit={handleLogin}>
         <h2>Login</h2>
         <div className='form-group'>
           <label>Enter Username: </label>
@@ -42,9 +50,10 @@ function Login() {
           <label>Enter Password: </label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
-        <button className='submit-btn' type='submit'>Login</button>
-        <p className='signup-redirect'>Don't have an account?<a href='/signup'>Create Account</a></p>
+        <button className='login-button' type='submit'>Login</button>
+        <p className='signup-link'>Don't have an account?<a href='/signup'>Create Account</a></p>
       </form>
+    </div>
     </div>
   );
 }

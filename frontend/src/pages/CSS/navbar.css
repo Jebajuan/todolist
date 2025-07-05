@@ -1,0 +1,68 @@
+/* Navbar Component - Larger Right-Aligned Items */
+.navbar-container {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.2rem 2rem; /* Increased vertical padding */
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.navbar-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 1.8rem; /* Increased gap between items */
+}
+
+.navbar-item {
+  white-space: nowrap;
+}
+
+/* Increased size for all nav items */
+.navbar-link, .navbar-button {
+  display: inline-block;
+  text-decoration: none;
+  color: #333;
+  font-weight: 600; /* Bolder text */
+  font-size: 1.1rem; /* Larger font size */
+  padding: 0.7rem 1.2rem; /* Larger padding */
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.navbar-link:hover, .navbar-button:hover {
+  color: #4285f4;
+  background-color: rgba(66, 133, 244, 0.08);
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.navbar-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.1rem; /* Match link size */
+}
+
+.navbar-link.active {
+  color: #4285f4;
+  position: relative;
+}
+
+.navbar-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1.2rem;
+  right: 1.2rem;
+  height: 3px;
+  background-color: #4285f4;
+  border-radius: 3px;
+}

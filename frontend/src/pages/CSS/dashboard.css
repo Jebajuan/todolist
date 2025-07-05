@@ -1,0 +1,94 @@
+/* Dashboard Content Styles */
+.dashboard-content {
+  padding-top: 80px; /* Space for fixed navbar */
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-title {
+  font-size: 2.5rem; /* Increased from 2.2rem */
+  color: #2d3748;
+  margin-bottom: 1.8rem; /* Slightly more space */
+  font-weight: 600;
+}
+
+.task-summary {
+  font-size: 1.3rem; /* Increased from 1.2rem */
+  color: #4a5568;
+  margin-bottom: 2.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.task-list {
+  margin: 2.2rem 0; /* Increased spacing */
+}
+
+.task-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.3rem; /* Slightly more padding */
+  margin-bottom: 1.2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-3px); /* More pronounced hover effect */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); /* Stronger shadow on hover */
+}
+
+.task-name {
+  color: #3182ce;
+  font-size: 1.3rem; /* Increased from 1.1rem */
+  font-weight: 500;
+  text-decoration: none !important; /* Removes underline permanently */
+  flex-grow: 1;
+}
+
+/* Removed hover underline completely */
+.task-name:hover {
+  text-decoration: none !important;
+  color: #2c5282; /* Darker blue on hover instead */
+}
+
+.task-remove {
+  background-color: #fed7d7;
+  color: #e53e3e;
+  border: none;
+  padding: 0.6rem 1.2rem; /* Slightly larger */
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1.1rem; /* Increased button text size */
+  transition: background-color 0.2s;
+}
+
+.task-remove:hover {
+  background-color: #feb2b2;
+}
+
+.create-prompt {
+  margin-top: 3rem;
+  font-size: 1.3rem; /* Increased from 1.1rem */
+  color: #718096;
+  text-align: center;
+}
+
+.create-link {
+  color: #38a169;
+  font-weight: 600;
+  text-decoration: none !important; /* No underline */
+  margin-left: 0.5rem;
+  font-size: 1.3rem; /* Match parent size */
+}
+
+.create-link:hover {
+  text-decoration: none !important; /* Ensure no underline on hover */
+  color: #2f855a; /* Darker green on hover */
+}
