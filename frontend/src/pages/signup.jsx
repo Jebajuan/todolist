@@ -8,10 +8,15 @@ function signup() {
     const [password,setPassword]=useState("");
     const [email,setEmail]=useState("");
     const navigate=useNavigate()
+
+    const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_API_BASE_URL_DEV
+  : import.meta.env.VITE_API_BASE_URL_PROD;
+
     const handleSignUp= async (e) =>{
         e.preventDefault()
         try{
-          const req= await axios.post("http://localhost:3001/signup",{
+          const req= await axios.post(`${API_BASE_URL}/signup`,{
             userName:userName.trim(),
             password:password.trim(),
             email:email.trim()

@@ -12,6 +12,10 @@ function createtask() {
     const [items,setItems]=useState([]);
     const navigate=useNavigate();
 
+    const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_API_BASE_URL_DEV
+  : import.meta.env.VITE_API_BASE_URL_PROD;
+
     const getAccessToken=()=>localStorage.getItem('accessToken')
     const getRefreshToken=()=> localStorage.getItem('refreshToken')
 
@@ -40,7 +44,7 @@ function createtask() {
                 navigate('/login')
                 return null
             }
-            const res=await axios.post("http://localhost:3001/refresh-token",{refreshToken})
+            const res=await axios.post(`${API_BASE_URL}/refresh-token`,{refreshToken})
             localStorage.setItem('accessToken',res.data.accessToken)
             return res.data.accessToken
         }
@@ -80,7 +84,7 @@ function createtask() {
                 alert("Enter the list");
                 return;
             }
-            const req=await axiosPostWithAuth("http://localhost:3001/create",{
+            const req=await axiosPostWithAuth(`${API_BASE_URL}/create`,{
                 userName:userName,
                 taskName:taskName.trim(),
                 tasks:items

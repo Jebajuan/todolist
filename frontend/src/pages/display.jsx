@@ -12,6 +12,10 @@ function display() {
     const [taskList,setList]=useState([])
     const [insert,setInsert]=useState("")
 
+    const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_API_BASE_URL_DEV
+  : import.meta.env.VITE_API_BASE_URL_PROD;
+
     const getAccessToken=()=>localStorage.getItem('accessToken')
     const getRefreshToken=()=> localStorage.getItem('refreshToken')
 
@@ -23,7 +27,7 @@ function display() {
                 localStorage.removeItem('selectedItem')
                 return null
             }
-            const res=await axios.post("http://localhost:3001/refresh-token",{refreshToken})
+            const res=await axios.post(`${API_BASE_URL}/refresh-token`,{refreshToken})
             localStorage.setItem('accessToken',res.data.accessToken)
             return res.data.accessToken
         }
@@ -59,7 +63,7 @@ function display() {
         const items = stored ? JSON.parse(stored) : null;
         const temp=items.task
         setTaskName(temp)
-        const req=await axiosPostWithAuth("http://localhost:3001/display",{
+        const req=await axiosPostWithAuth(`${API_BASE_URL}/display`,{
             userName:user,
             taskName:temp
         })
@@ -73,7 +77,7 @@ function display() {
             return
         }
         try{
-            const req=await axiosPostWithAuth("http://localhost:3001/addList",{
+            const req=await axiosPostWithAuth(`${API_BASE_URL}/addList`,{
                 userName:userName,
                 taskName:taskName,
                 item:insert.trim()
@@ -87,7 +91,7 @@ function display() {
 
     const removeTask=async ()=>{
         try{
-            const req=await axiosPostWithAuth("http://localhost:3001/removeTask",{
+            const req=await axiosPostWithAuth(`${API_BASE_URL}/removeTask`,{
                 userName:userName,
                 taskName:taskName
                 })
@@ -101,7 +105,7 @@ function display() {
     const removeItem=async (index)=>{
         try{
             const item=taskList[index]
-            const req=await axiosPostWithAuth("http://localhost:3001/removeItem",{
+            const req=await axiosPostWithAuth(`${API_BASE_URL}/removeItem`,{
                 userName:userName,
                 taskName:taskName,
                 item:item

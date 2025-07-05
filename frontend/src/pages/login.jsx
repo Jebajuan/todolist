@@ -8,18 +8,23 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_API_BASE_URL_DEV
+  : import.meta.env.VITE_API_BASE_URL_PROD;
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const req = await axios.post("http://localhost:3001/login", {
+      const req = await axios.post(`${API_BASE_URL}/login`, {
         userName:userName.trim(),
         password:password.trim()
       });
 
       const { message, isLogin, accessToken, refreshToken } = req.data;
-      localStorage.setItem('accessToken',accessToken)
-      localStorage.setItem('refreshToken',refreshToken)
+
       if (isLogin) {
+        localStorage.setItem('accessToken',accessToken)
+        localStorage.setItem('refreshToken',refreshToken)
         navigate("/dashboard");
       } else {
         alert(message);

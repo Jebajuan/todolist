@@ -7,12 +7,16 @@ function navbar() {
 
   const navigate=useNavigate()
   const location=useLocation()
+  
+  const API_BASE_URL = import.meta.env.MODE === 'development'
+  ? import.meta.env.VITE_API_BASE_URL_DEV
+  : import.meta.env.VITE_API_BASE_URL_PROD;
 
   const handleLogout=async()=>{
     const refreshToken=localStorage.getItem('refreshToken')
     if(refreshToken){
       try{
-        await axios.post("http://localhost:3001/logout",{refreshToken})
+        await axios.post(`${API_BASE_URL}/logout`,{refreshToken})
         alert("logout Successful");
       }
       catch(error){
