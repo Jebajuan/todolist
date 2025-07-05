@@ -89,10 +89,8 @@ app.post("/create",async(req,res)=>{
       return res.status(400).json({message:"There is an existing task",isCreate:false})
      }
     if(tasks.length<1){
-      console.log(userName)
       return res.status(400).json({message:"The list is empty",isCreate:false})
     }
-    // console.log(userName)
     const newCreateTask = new createTask({
       userName:userName,
       taskName:lowerTaskname,
@@ -146,8 +144,8 @@ app.post("/dashboard",auth,async (req,res)=>{
 
 app.post("/display",auth,async (req,res)=>{
   try{
-    const {taskName}=req.body
-    const task=await createTask.findOne({taskName:taskName})
+    const {userName,taskName}=req.body
+    const task=await createTask.findOne({userName:userName,taskName:taskName})
     const taskList=task.taskList
     res.status(200).json({taskList})
   }
@@ -158,11 +156,10 @@ app.post("/display",auth,async (req,res)=>{
 
 app.post("/removeTask",auth,async (req,res)=>{
   try{
-    const {taskName}=req.body
-    await createTask.deleteOne({taskName:taskName})
-    const tasks= await createTask.find({},"taskName")
+    const {userName,taskName}=req.body
+    await createTask.deleteOne({userName:userName,taskName:taskName})
+    const tasks= await createTask.find({userName:userName},"taskName")
     const taskNames=tasks.map(task=> task.taskName)
-    console.log(taskName)
     res.status(200).json({message:"Deletion Sucessful",taskName:taskNames})
   }
   catch(error){
@@ -172,9 +169,12 @@ app.post("/removeTask",auth,async (req,res)=>{
 
 app.post("/removeItem",auth,async (req,res)=>{
   try{
-    const {taskName,item}=req.body
-    await createTask.updateOne({taskName:taskName},{$pull:{taskList:item}})
-    const task=await createTask.findOne({taskName:taskName})
+    const {userName,taskName,item}=req.body
+    await createTask.updateOne({userName:userName,taskName:taskName},{$pull:{taskList:item}})
+    const task=await createTask.findOne({userName:userName,taskName:taskName})
+    if(!task){
+      return res.status(404).json({message:"task not found"})
+    }
     const taskList=task.taskList
     res.status(200).json({taskList:taskList})
   }
@@ -185,9 +185,9 @@ app.post("/removeItem",auth,async (req,res)=>{
 
 app.post("/addList",auth,async(req,res)=>{
   try{
-    const {taskName,item}=req.body
-    await createTask.updateOne({taskName:taskName},{$push:{taskList:item}})
-    const task=await createTask.findOne({taskName:taskName})
+    const {userName,taskName,item}=req.body
+    await createTask.updateOne({userName:userName,taskName:taskName},{$push:{taskList:item}})
+    const task=await createTask.findOne({userName:userName,taskName:taskName}) 
     const taskList=task.taskList
     res.status(200).json({taskList:taskList})
   }
@@ -201,7 +201,7 @@ app.post("/refresh-token",(req,res)=>{
   if(!refreshToken){
     return res.status(400).json({message:"No refresh Token"})
   }
-  if(!refreshToken.includes(refreshTokens)){
+  if(!refreshTokens.includes(refreshToken)){
     return res.status(400).json({message:"Invalid refresh token"})
   }
 
@@ -219,7 +219,7 @@ app.post("/refresh-token",(req,res)=>{
 app.post("/logout",(req,res)=>{
   const {refreshToken}=req.body
   refreshTokens=refreshTokens.filter(token=>token !== refreshToken);
-  res.status(200).json({message:"Logout successfull"})
+  res.status(200).json({message:"Logout Successfull",isLogout:true})
 })
 
 app.listen(PORT,()=>console.log("Server started successfully"))
