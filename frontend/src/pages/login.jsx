@@ -18,6 +18,11 @@ function Login() {
       const req = await axios.post(`${API_BASE_URL}/login`, {
         userName:userName.trim(),
         password:password.trim()
+      },{
+        withCredentials:true,
+        headers:{
+          'Content-Type':'application/json'
+        }
       });
 
       const { message, isLogin, accessToken, refreshToken } = req.data;

@@ -16,7 +16,12 @@ function navbar() {
     const refreshToken=localStorage.getItem('refreshToken')
     if(refreshToken){
       try{
-        await axios.post(`${API_BASE_URL}/logout`,{refreshToken})
+        await axios.post(`${API_BASE_URL}/logout`,{refreshToken},{
+        withCredentials:true,
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
         alert("logout Successful");
       }
       catch(error){

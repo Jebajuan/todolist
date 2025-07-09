@@ -20,7 +20,12 @@ function signup() {
             userName:userName.trim(),
             password:password.trim(),
             email:email.trim()
-          });
+          },{
+        withCredentials:true,
+        headers:{
+          'Content-Type':'application/json'
+        }
+      });
 
           const {message, isSignup ,accessToken, refreshToken}=req.data
           localStorage.setItem('accessToken',accessToken)
