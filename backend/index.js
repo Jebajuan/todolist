@@ -14,7 +14,7 @@ const app = express()
 
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = ['https://todolist-xi-murex.vercel.app/', 'http://localhost:5173'];
+    const allowedOrigins = ['https://todolist-xi-murex.vercel.app', 'http://localhost:5173'];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -24,14 +24,17 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors(corsOptions));
-
-
 const PORT = process.env.PORT || 3001
 
 app.use(express.json())
 app.set('trust proxy', 1);
 app.use(cors(corsOptions))
+
+app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin);
+  next();
+});
+
 
 mdb
   .connect(process.env.MONGODB_URL)
