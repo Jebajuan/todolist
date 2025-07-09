@@ -13,18 +13,25 @@ dotenv.config()
 const app = express()
 
 const corsOptions = {
-  origin: ['https://todolist-nigk.vercel.app', 'http://localhost:5173'], // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: function (origin, callback) {
+    const allowedOrigins = ['https://todolist-xi-murex.vercel.app/', 'http://localhost:5173'];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 };
+
+app.use(cors(corsOptions));
+
 
 const PORT = process.env.PORT || 3001
 
 app.use(express.json())
 app.set('trust proxy', 1);
 app.use(cors(corsOptions))
-app.options('*',cors(corsOptions))
 
 mdb
   .connect(process.env.MONGODB_URL)
