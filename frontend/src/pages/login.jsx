@@ -43,7 +43,7 @@ function Login() {
   React.useEffect(() => {
   document.body.style.overflow = 'hidden';
   return () => {
-    document.body.style.overflow = 'visible'; // Clean up on unmount
+    document.body.style.overflow = 'visible'; 
   };
   }, []);
 

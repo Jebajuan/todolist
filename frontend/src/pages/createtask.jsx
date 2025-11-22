@@ -90,7 +90,6 @@ function createtask() {
                 tasks:items
             });
             const {message,isCreate}=req.data
-            console.log(message)
             if(!isCreate){
                 alert(message)
             }else{
