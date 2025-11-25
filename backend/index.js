@@ -31,7 +31,7 @@ app.set('trust proxy', 1);
 app.use(cors(corsOptions))
 
 app.use((req, res, next) => {
-  console.log('Origin:', req.headers.origin);
+  //console.log('Origin:', req.headers.origin);
   next();
 });
 
